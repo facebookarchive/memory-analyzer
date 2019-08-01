@@ -157,18 +157,17 @@ This is an error from GDB itself, and it could mean a couple of things:
 1. You don't have the correct debuginfo installed, or
 2. You are using the wrong Python executable. 
 
-If you are running on your devserver, you are likely running into issues with the executable. If you are running on a non-standard machine, it could be debuginfo.
-
-To fix the incorrect debuginfo, figure out which platform your binary was built with (the current default is platform007, if you built with a different platform you likely have that customized specifically in your build process), and install the debuginfo associated with that runtime. For example:
+To fix the incorrect debuginf install the debuginfo associated with the python runtime the analyzed process is using. For example:
     
-    sudo yum install fb-platform007-python3-runtime-debuginfo.x86_64
+    sudo yum install python3-debuginfo
 
-Will install the debuginfo for platform007 if it is missing.
+or
+    sudo apt-get install python3-dbg
 
 
-To solve the wrong Python executable, figure out what executable you need (which platform you built on and which python version), and use the --exec flag to specify it:
+To solve the wrong Python executable, figure out what executable you need (which python version the analyzed process is running with), and use the --exec flag to specify it:
 
-    memory_analyzer run $PID -e /usr/local/fbcode/platform007/bin/python3.6
+    memory_analyzer run $PID -e /usr/local/bin/python3.6
 
 
 ### It is hanging
