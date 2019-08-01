@@ -1,0 +1,6 @@
+click
+attrs
+jinja2
+prettytable
+pympler
+objgraph
