@@ -4,4 +4,3 @@ jinja2
 prettytable
 pympler
 objgraph
-coverage
