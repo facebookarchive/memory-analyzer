@@ -215,7 +215,7 @@ def run(
         diffs = analysis_utils.snapshot_diff(retrieved_objs, snapshot)
         retrieved_objs.extend(diffs)
 
-    
+
     frontend_utils.echo_info(f"Writing output to file {output_file}")
     write_to_output_file(output_file, retrieved_objs)
     if not quiet:
