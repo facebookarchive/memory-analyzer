@@ -10,24 +10,13 @@ import os
 import sys
 from unittest import TestCase, mock
 
-
 # Because we cannot `import gdb` except for modules called via GDB, we must
 # mock the `import gdb` in gdb_commands.
-orig_import = __import__
 mock_gdb = mock.MagicMock()
+sys.modules["gdb"] = mock_gdb
 
-
-def import_mock(name, *args):
-    if name == "gdb":
-        return mock_gdb
-    return orig_import(name, *args)
-
-
-with mock.patch("builtins.__import__", side_effect=import_mock):
-    # Hacks to import gdb_commands with the .gdb extension
-    current_path = os.path.abspath(os.path.dirname(sys.argv[0]))
-    filepath = f"{current_path}/gdb_commands.py"
-    gdb_commands = imp.load_source("gdb_commands", filepath)
+if True:
+    import gdb_commands  # isort: skip doesn't appear to work
 
 
 class GdbCommandsTests(TestCase):
