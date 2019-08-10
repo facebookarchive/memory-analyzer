@@ -18,7 +18,7 @@ from pympler import muppy, summary  # noqa
 class ObjGraphTemplateTests(TestCase):
     template_name = "analysis.py.template"
     filename = "some_filename"
-    templates_path = f"{os.path.abspath(os.path.dirname(sys.argv[0]))}/templates/"
+    templates_path = f"{os.path.abspath(os.path.dirname(__file__))}/../memory_analyzer/templates/"
     pid = 1234
     specific_refs = ["str", "int"]
 
