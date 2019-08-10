@@ -12,9 +12,7 @@ from frontend import memanz_curses
 
 class MemanzCursesTest(TestCase):
     def setUp(self):
-        self.mock_curses = mock.patch(
-            "frontend.memanz_curses.curses"
-        ).start()
+        self.mock_curses = mock.patch("frontend.memanz_curses.curses").start()
         self.addCleanup(self.mock_curses.stop)
         self.mock_curses.LINES = 2
         self.mock_curses.COLS = 100

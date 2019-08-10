@@ -18,22 +18,16 @@ class AnalysisUtilsTest(TestCase):
     CURRENT_PATH = os.path.abspath(os.path.dirname(sys.argv[0]))
 
     def setUp(self):
-        self.gdb = analysis_utils.GDBObject(
-            self.PID, self.CURRENT_PATH, sys.executable
-        )
+        self.gdb = analysis_utils.GDBObject(self.PID, self.CURRENT_PATH, sys.executable)
         self.filepath = f"{self.CURRENT_PATH}/gdb_commands.py"
         self.executable = sys.executable
         # Swallow the info messages
-        patch_info = mock.patch(
-            "frontend.frontend_utils.echo_info"
-        )
+        patch_info = mock.patch("frontend.frontend_utils.echo_info")
         self.mock_info = patch_info.start()
         self.addCleanup(self.mock_info.stop)
 
     @mock.patch("analysis_utils.copyfile")
-    @mock.patch(
-        "analysis_utils.subprocess.Popen", autospec=True
-    )
+    @mock.patch("analysis_utils.subprocess.Popen", autospec=True)
     def test_command_string_built_correctly(self, mock_sub, _):
         with mock.patch("builtins.open", mock.mock_open()):
             self.gdb.unpickle_pipe = mock.MagicMock()
@@ -62,9 +56,7 @@ class AnalysisUtilsTest(TestCase):
         self.mock_info.assert_has_calls(calls)
 
     @mock.patch("analysis_utils.copyfile")
-    @mock.patch(
-        "analysis_utils.subprocess.Popen", autospec=True
-    )
+    @mock.patch("analysis_utils.subprocess.Popen", autospec=True)
     def test_command_string_built_correctly_debug_mode(self, mock_sub, _):
         with mock.patch("builtins.open", mock.mock_open()):
             self.gdb.unpickle_pipe = mock.MagicMock()

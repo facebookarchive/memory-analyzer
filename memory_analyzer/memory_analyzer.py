@@ -13,8 +13,10 @@ from functools import partial
 from multiprocessing.pool import ThreadPool
 
 import click
+
 import analysis_utils
 from frontend import frontend_utils
+
 
 def analyze_memory_launcher(
     pid, num_refs, specific_refs, debug, output_file, executable
@@ -214,7 +216,6 @@ def run(
     if snapshot:
         diffs = analysis_utils.snapshot_diff(retrieved_objs, snapshot)
         retrieved_objs.extend(diffs)
-
 
     frontend_utils.echo_info(f"Writing output to file {output_file}")
     write_to_output_file(output_file, retrieved_objs)

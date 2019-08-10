@@ -3,4 +3,4 @@ from tests.test_analysis_utils import AnalysisUtilsTest
 from tests.test_curses import MemanzCursesTest
 from tests.test_frontend import FrontendUtilsTest
 from tests.test_gdb_commands import GdbCommandsTests
-from tests.test_main_lib import FakeOSError,MainLibTests
+from tests.test_main_lib import FakeOSError, MainLibTests

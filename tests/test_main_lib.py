@@ -9,6 +9,7 @@ from functools import partial
 from unittest import TestCase, mock
 
 import click
+
 import memory_analyzer
 
 

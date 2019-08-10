@@ -143,4 +143,3 @@ class FrontendUtilsTest(TestCase):
         pt = frontend_utils.format_summary_output(items)
         self.assertEqual(pt._rows, items.data)
         self.assertEqual(items.data, updated_items)
-

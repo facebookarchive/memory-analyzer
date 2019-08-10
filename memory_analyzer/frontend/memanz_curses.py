@@ -13,7 +13,6 @@ directly by the memory analyzer.
 import curses
 from collections import namedtuple
 
-
 UP_KEYS = [curses.KEY_UP, ord("w"), ord("k"), ord("H"), curses.KEY_PPAGE]
 DOWN_KEYS = [curses.KEY_DOWN, ord("s"), ord("j"), ord("G"), curses.KEY_NPAGE]
 RIGHT_KEYS = [curses.KEY_RIGHT, ord("d"), ord("l")]

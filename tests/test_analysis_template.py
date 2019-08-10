@@ -5,20 +5,23 @@
 # LICENSE file in the root directory of this source tree.
 
 import os
-import sys
 import pickle
+import sys
 from unittest import TestCase, mock
 
 import objgraph
 from jinja2 import Environment, FileSystemLoader
-import analysis_utils
 from pympler import muppy, summary  # noqa
+
+import analysis_utils
 
 
 class ObjGraphTemplateTests(TestCase):
     template_name = "analysis.py.template"
     filename = "some_filename"
-    templates_path = f"{os.path.abspath(os.path.dirname(__file__))}/../memory_analyzer/templates/"
+    templates_path = (
+        f"{os.path.abspath(os.path.dirname(__file__))}/../memory_analyzer/templates/"
+    )
     pid = 1234
     specific_refs = ["str", "int"]
 
