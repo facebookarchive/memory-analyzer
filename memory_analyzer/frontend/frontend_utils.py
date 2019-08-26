@@ -11,8 +11,8 @@ import subprocess
 
 import click
 import prettytable
-from frontend import memanz_curses
 
+from frontend import memanz_curses
 
 
 def readable_size(i, snapshot=False):

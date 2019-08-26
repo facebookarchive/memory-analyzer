@@ -7,9 +7,9 @@
 import errno
 import io
 import os
-import stat
 import pickle
 import select
+import stat
 import subprocess
 import sys
 from contextlib import contextmanager
@@ -18,8 +18,9 @@ from typing import List
 
 from attr import dataclass
 from jinja2 import Environment, FileSystemLoader
-from frontend import frontend_utils
 from pympler import summary
+
+from frontend import frontend_utils
 
 
 @dataclass
