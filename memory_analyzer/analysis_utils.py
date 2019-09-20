@@ -20,7 +20,7 @@ from attr import dataclass
 from jinja2 import Environment, FileSystemLoader
 from pympler import summary
 
-from frontend import frontend_utils
+from .frontend import frontend_utils
 
 
 @dataclass

@@ -10,7 +10,7 @@ from unittest import TestCase, mock
 
 import click
 
-import memory_analyzer
+from memory_analyzer import memory_analyzer
 
 
 class FakeOSError(OSError):
@@ -25,24 +25,24 @@ def fake_kill(pid, sig, errno=None):
 
 
 class MainLibTests(TestCase):
-    @mock.patch("memory_analyzer.os.geteuid")
+    @mock.patch("memory_analyzer.memory_analyzer.os.geteuid")
     def test_is_root_passes(self, mock_geteuid):
         mock_geteuid.return_value = 0
         self.assertTrue(memory_analyzer.is_root())
 
-    @mock.patch("memory_analyzer.os.geteuid")
+    @mock.patch("memory_analyzer.memory_analyzer.os.geteuid")
     def test_is_root_fails(self, mock_geteuid):
         mock_geteuid.return_value = 42
         self.assertFalse(memory_analyzer.is_root())
 
-    @mock.patch("memory_analyzer.os.kill")
+    @mock.patch("memory_analyzer.memory_analyzer.os.kill")
     def test_validate_pids_with_valid_pids(self, mock_kill):
         ctx = param = mock.MagicMock()
         mock_kill.side_effect = fake_kill
         self.assertEqual([42], memory_analyzer.validate_pids(ctx, param, [42]))
 
-    @mock.patch("memory_analyzer.os.geteuid")
-    @mock.patch("memory_analyzer.os.kill")
+    @mock.patch("memory_analyzer.memory_analyzer.os.geteuid")
+    @mock.patch("memory_analyzer.memory_analyzer.os.kill")
     def test_validate_pids_kills_with_signal_value_zero(self, mock_kill, mock_geteuid):
         mock_geteuid.return_value = 42
         ctx = param = mock.MagicMock()
@@ -51,8 +51,8 @@ class MainLibTests(TestCase):
 
         mock_kill.assert_has_calls([mock.call(42, 0), mock.call(314, 0)])
 
-    @mock.patch("memory_analyzer.os.geteuid")
-    @mock.patch("memory_analyzer.os.kill")
+    @mock.patch("memory_analyzer.memory_analyzer.os.geteuid")
+    @mock.patch("memory_analyzer.memory_analyzer.os.kill")
     def test_validate_pids_with_an_invalid_pid_and_no_root(
         self, mock_kill, mock_geteuid
     ):
@@ -63,8 +63,8 @@ class MainLibTests(TestCase):
         with self.assertRaises(click.UsageError):
             memory_analyzer.validate_pids(ctx, param, [42, 314])
 
-    @mock.patch("memory_analyzer.os.geteuid")
-    @mock.patch("memory_analyzer.os.kill")
+    @mock.patch("memory_analyzer.memory_analyzer.os.geteuid")
+    @mock.patch("memory_analyzer.memory_analyzer.os.kill")
     def test_validate_pids_with_an_invalid_pid_and_error_is_not_permission_related(
         self, mock_kill, mock_geteuid
     ):

@@ -14,8 +14,8 @@ from multiprocessing.pool import ThreadPool
 
 import click
 
-import analysis_utils
-from frontend import frontend_utils
+from . import analysis_utils
+from .frontend import frontend_utils
 
 
 def analyze_memory_launcher(

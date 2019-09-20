@@ -7,8 +7,8 @@
 from tempfile import NamedTemporaryFile
 from unittest import TestCase, mock
 
-import analysis_utils
-from frontend import frontend_utils
+from .. import analysis_utils
+from ..frontend import frontend_utils
 
 
 class FrontendUtilsTest(TestCase):

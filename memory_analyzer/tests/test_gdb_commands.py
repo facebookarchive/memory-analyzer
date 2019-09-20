@@ -16,7 +16,7 @@ mock_gdb = mock.MagicMock()
 sys.modules["gdb"] = mock_gdb
 
 if True:
-    import gdb_commands  # isort: skip doesn't appear to work
+    from .. import gdb_commands  # isort: skip doesn't appear to work
 
 
 class GdbCommandsTests(TestCase):
@@ -32,7 +32,8 @@ class GdbCommandsTests(TestCase):
     #     mock_calls = [mock.call(call_1), mock.call(call_2)]
     #     mock_gdb.execute.assert_has_calls(mock_calls)
 
-    def test_lock_GIL(self):
+    @mock.patch("sys.stdout.write")
+    def test_lock_GIL(self, mock_write):
         func = mock.Mock()
         mock_gdb.execute.return_value = (
             "[New Thread 0x7f48e4dd7700 (LWP 2640572)]\n$2 = PyGILState_UNLOCKED\n"
@@ -43,8 +44,10 @@ class GdbCommandsTests(TestCase):
         call_2 = "call PyGILState_Release($2)"
         mock_calls = [mock.call(call_1, to_string=True), mock.call(call_2)]
         mock_gdb.execute.assert_has_calls(mock_calls)
+        mock_write.assert_has_calls([mock.call("$2"), mock.call("\n")])
 
-    def test_lock_GIL_weird_return(self):
+    @mock.patch("sys.stdout.write")
+    def test_lock_GIL_weird_return(self, mock_write):
         func = mock.Mock()
         mock_gdb.execute.return_value = "[New Thread 0x7f48e4dd7700 (LWP 2640572)]"
         wrap = gdb_commands.lock_GIL(func)
@@ -53,3 +56,4 @@ class GdbCommandsTests(TestCase):
         call_2 = "call PyGILState_Release($1)"
         mock_calls = [mock.call(call_1, to_string=True), mock.call(call_2)]
         mock_gdb.execute.assert_has_calls(mock_calls)
+        mock_write.assert_has_calls([mock.call("$1"), mock.call("\n")])
