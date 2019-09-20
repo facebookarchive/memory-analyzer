@@ -77,12 +77,7 @@ def cli():
     pass
 
 
-def add_commands():
-    cli.add_command(run)
-    cli.add_command(view)
-
-
-@click.command()
+@cli.command()
 @click.argument("filename", type=click.Path(exists=True))
 def view(filename):
     """
@@ -100,7 +95,7 @@ def view(filename):
     frontend_utils.initiate_curses(pages)
 
 
-@click.command()
+@cli.command()
 @click.argument("pids", callback=validate_pids, nargs=-1)
 @click.option(
     "-s",
@@ -225,5 +220,4 @@ def run(
 
 
 if __name__ == "__main__":
-    add_commands()
     cli()
