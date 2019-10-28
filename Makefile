@@ -15,5 +15,12 @@ test:
 
 .PHONY: format
 format:
+	@/bin/bash -c 'die() { echo "$$1"; exit 1; }; \
+	  while read filename; do \
+	  grep -q "Copyright (c) Facebook" "$$filename" || \
+	    die "Missing copyright in $$filename"; \
+	  grep -q "#!/usr/bin/env python3" "$$filename" || \
+	    die "Missing #! in $$filename"; \
+	  done < <( git ls-tree -r --name-only HEAD | grep ".py$$" )'
 	isort --recursive -y memory_analyzer tests
 	black memory_analyzer tests
