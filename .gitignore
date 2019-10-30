@@ -7,3 +7,4 @@ memory_analyzer/templates/rendered_template*.out
 htmlcov
 dist
 build
+.tox
