@@ -1,3 +1,5 @@
+.DS_Store
+*.pyc
 .coverage
 .venv
 __pycache__
