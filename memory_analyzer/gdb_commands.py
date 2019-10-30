@@ -11,16 +11,16 @@ import sys
 
 import gdb
 
-TEMPLATES_PATH = os.path.abspath(os.path.dirname(sys.argv[0])) + "/templates"
+TEMPLATES_PATH = os.getenv("MEMORY_ANALYZER_TEMPLATES_PATH")
 
 
 def lock_GIL(func):
     def wrapper(*args):
-        out = gdb.execute("call PyGILState_Ensure()", to_string=True)
+        out = gdb.execute("call (void*) PyGILState_Ensure()", to_string=True)
         gil_value = next((x for x in out.split() if x.startswith("$")), "$1")
-        print(gil_value)
+        print("GIL", gil_value)
         func(*args)
-        call = "call PyGILState_Release(" + gil_value + ")"
+        call = "call (void) PyGILState_Release(" + gil_value + ")"
         gdb.execute(call)
 
     return wrapper
@@ -35,7 +35,9 @@ class FileCommand(gdb.Command):
         cmd_string = "with open('{filename}') as f: exec(f.read())".format(
             filename=filename
         )
-        gdb.execute('call PyRun_SimpleString("{cmd_str}")'.format(cmd_str=cmd_string))
+        gdb.execute(
+            'call (void) PyRun_SimpleString("{cmd_str}")'.format(cmd_str=cmd_string)
+        )
 
 
 FileCommand()

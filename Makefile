@@ -16,7 +16,7 @@ setup:
 .PHONY: test
 test:
 	python3 -m coverage run -m memory_analyzer.tests
-	python3 -m coverage report --omit='.venv/*' --show-missing
+	python3 -m coverage report --omit='.venv/*,.tox/*' --show-missing
 
 .PHONY: format
 format:

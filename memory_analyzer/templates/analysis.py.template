@@ -82,6 +82,7 @@ try:
       pickle.dump(summ, fifo)
 
 except Exception as e:
+    print("Got exception", e)
     import pickle
     # We don't want exceptions here to affect the profiled process but want to
     # see the exceptions in the UI

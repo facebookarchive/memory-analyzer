@@ -31,10 +31,21 @@ class RetrievedObjects:
 
 
 class GDBObject:
-    def __init__(self, pid, current_path, executable):
+    def __init__(self, pid, current_path, executable, template_out_path):
+        """
+        Args:
+
+            pid: numeric pid of the target
+            current_path: the directory containing gdb_commands.py
+            executable: the binary passed as the first arg to gdb
+            template_out_path: the location that analysis.py rendered templates
+                end up in.
+        """
         self.pid = pid
         self.fifo = f"/tmp/memanz_pipe_{self.pid}"
         self.current_path = current_path
+        # These should all be the same, so safe for threads.
+        os.putenv("MEMORY_ANALYZER_TEMPLATES_PATH", template_out_path)
         self.executable = executable
 
     def run_analysis(self, debug=False):
@@ -51,6 +62,8 @@ class GDBObject:
             "-ex",
             "set trace-commands on",
             f"{'-batch' if debug else '-batch-silent'}",
+            # This shouldn't be required since we specify absolute path, but
+            # TODO this gives us a way to inject a path with objgraph on it.
             "-ex",
             # Lets gdb find the correct gdb_commands script.
             f"set directories {self.current_path}",
@@ -150,14 +163,25 @@ def load_template(name, templates_path):
 
 
 def render_template(
-    template_name, templates_path, num_refs, pid, specific_refs, output_file
+    template_name,
+    templates_path,
+    num_refs,
+    pid,
+    specific_refs,
+    output_file,
+    template_out_dir,
 ):
     objgraph_template = load_template(template_name, templates_path)
     template = objgraph_template.render(
         num_refs=num_refs, pid=pid, specific_refs=specific_refs, output_file=output_file
     )
-    with open(f"{templates_path}rendered_template-{pid}.py.out", "w") as f:
-        f.write(template)
+    # This path has to match the end of gdb_commands.py; the env var is set in
+    # GDBObject constructor above.
+    if template_out_dir:
+        with open(
+            os.path.join(template_out_dir, f"rendered_template-{pid}.py.out"), "w"
+        ) as f:
+            f.write(template)
     return template
 
 
