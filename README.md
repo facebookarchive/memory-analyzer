@@ -174,7 +174,7 @@ This is an error from GDB itself, and it could mean a couple of things:
 1. You don't have the correct debuginfo installed, or
 2. You are using the wrong Python executable. 
 
-To fix the incorrect debuginf install the debuginfo associated with the python runtime the analyzed process is using. For example:
+To fix the incorrect debuginfo install the debuginfo associated with the python runtime the analyzed process is using. For example:
     
     sudo yum install python3-debuginfo
 
