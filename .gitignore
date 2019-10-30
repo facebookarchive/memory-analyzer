@@ -1,4 +1,10 @@
+.DS_Store
 .coverage
 .venv
+*.egg-info
 __pycache__
 memory_analyzer/templates/rendered_template*.out
+htmlcov
+dist
+build
+.tox

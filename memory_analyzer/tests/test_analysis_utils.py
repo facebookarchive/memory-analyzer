@@ -10,7 +10,7 @@ import subprocess
 import sys
 from unittest import TestCase, mock
 
-import analysis_utils
+from .. import analysis_utils
 
 
 class AnalysisUtilsTest(TestCase):
@@ -22,12 +22,12 @@ class AnalysisUtilsTest(TestCase):
         self.filepath = f"{self.CURRENT_PATH}/gdb_commands.py"
         self.executable = sys.executable
         # Swallow the info messages
-        patch_info = mock.patch("frontend.frontend_utils.echo_info")
+        patch_info = mock.patch("memory_analyzer.frontend.frontend_utils.echo_info")
         self.mock_info = patch_info.start()
         self.addCleanup(self.mock_info.stop)
 
-    @mock.patch("analysis_utils.copyfile")
-    @mock.patch("analysis_utils.subprocess.Popen", autospec=True)
+    @mock.patch("memory_analyzer.analysis_utils.copyfile")
+    @mock.patch("memory_analyzer.analysis_utils.subprocess.Popen", autospec=True)
     def test_command_string_built_correctly(self, mock_sub, _):
         with mock.patch("builtins.open", mock.mock_open()):
             self.gdb.unpickle_pipe = mock.MagicMock()
@@ -55,8 +55,8 @@ class AnalysisUtilsTest(TestCase):
         ]
         self.mock_info.assert_has_calls(calls)
 
-    @mock.patch("analysis_utils.copyfile")
-    @mock.patch("analysis_utils.subprocess.Popen", autospec=True)
+    @mock.patch("memory_analyzer.analysis_utils.copyfile")
+    @mock.patch("memory_analyzer.analysis_utils.subprocess.Popen", autospec=True)
     def test_command_string_built_correctly_debug_mode(self, mock_sub, _):
         with mock.patch("builtins.open", mock.mock_open()):
             self.gdb.unpickle_pipe = mock.MagicMock()
@@ -84,8 +84,8 @@ class AnalysisUtilsTest(TestCase):
         ]
         self.mock_info.assert_has_calls(calls)
 
-    @mock.patch("analysis_utils.pickle.load")
-    @mock.patch("frontend.frontend_utils.echo_error")
+    @mock.patch("memory_analyzer.analysis_utils.pickle.load")
+    @mock.patch("memory_analyzer.frontend.frontend_utils.echo_error")
     def test_unpickle_pipe_errors(self, mock_echo, mock_pickle):
         mock_pickle.side_effect = NameError("Random Exception")
         with self.assertRaises(NameError):
@@ -94,16 +94,16 @@ class AnalysisUtilsTest(TestCase):
             "NameError occurred during analysis: Random Exception"
         )
 
-    @mock.patch("analysis_utils.pickle.load")
-    @mock.patch("frontend.frontend_utils.echo_error")
+    @mock.patch("memory_analyzer.analysis_utils.pickle.load")
+    @mock.patch("memory_analyzer.frontend.frontend_utils.echo_error")
     def test_unpickle_pipe_unpickle_errors(self, mock_echo, mock_pickle):
         mock_pickle.side_effect = pickle.UnpicklingError("Error")
         with self.assertRaises(pickle.UnpicklingError):
             self.gdb.unpickle_pipe("Fifo Data")
         mock_echo.assert_called_with("Error retrieving data from process: Error")
 
-    @mock.patch("analysis_utils.pickle.load")
-    @mock.patch("frontend.frontend_utils.echo_error")
+    @mock.patch("memory_analyzer.analysis_utils.pickle.load")
+    @mock.patch("memory_analyzer.frontend.frontend_utils.echo_error")
     def test_read_items_exception(self, mock_echo, mock_pickle):
         mock_pickle.return_value = AttributeError("Whats up")
         with self.assertRaises(AttributeError):
@@ -112,8 +112,8 @@ class AnalysisUtilsTest(TestCase):
             "AttributeError occurred during analysis: Whats up"
         )
 
-    @mock.patch("analysis_utils.pickle.load")
-    @mock.patch("frontend.frontend_utils.echo_error")
+    @mock.patch("memory_analyzer.analysis_utils.pickle.load")
+    @mock.patch("memory_analyzer.frontend.frontend_utils.echo_error")
     def test_snapshot_diff_error(self, mock_echo, mock_pickle):
         mock_pickle.side_effect = pickle.UnpicklingError("Error")
         with mock.patch("builtins.open", mock.mock_open()):

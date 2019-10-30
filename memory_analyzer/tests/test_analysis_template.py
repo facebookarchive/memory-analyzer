@@ -13,15 +13,13 @@ import objgraph
 from jinja2 import Environment, FileSystemLoader
 from pympler import muppy, summary  # noqa
 
-import analysis_utils
+from .. import analysis_utils
 
 
 class ObjGraphTemplateTests(TestCase):
     template_name = "analysis.py.template"
     filename = "some_filename"
-    templates_path = (
-        f"{os.path.abspath(os.path.dirname(__file__))}/../memory_analyzer/templates/"
-    )
+    templates_path = f"{os.path.abspath(os.path.dirname(__file__))}/../templates/"
     pid = 1234
     specific_refs = ["str", "int"]
 

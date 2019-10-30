@@ -1,17 +1,22 @@
+PYTHON?=python3
+
 .PHONY: venv
 venv:
-	python3 -m venv .venv
+	$(PYTHON) -m venv .venv
 	@echo 'run `source .venv/bin/activate` to use virtualenv'
 
-# intended to be run within venv
+# The rest of these are intended to be run within the venv, where python points
+# to whatever was used to set up the venv.
+#
 .PHONY: setup
+setup:
 	python3 -m pip install -Ur requirements.txt
 	python3 -m pip install -Ur requirements-dev.txt
 
 .PHONY: test
 test:
-	python3 -m coverage run -m tests
-	python3 -m coverage report --omit='.venv/*'
+	python3 -m coverage run -m memory_analyzer.tests
+	python3 -m coverage report --omit='.venv/*' --show-missing
 
 .PHONY: format
 format:
@@ -22,5 +27,12 @@ format:
 	  grep -q "#!/usr/bin/env python3" "$$filename" || \
 	    die "Missing #! in $$filename"; \
 	  done < <( git ls-tree -r --name-only HEAD | grep ".py$$" )'
-	isort --recursive -y memory_analyzer tests
-	black memory_analyzer tests
+	isort --recursive -y memory_analyzer setup.py
+	black memory_analyzer setup.py
+
+.PHONY: release
+release:
+	pip install -U wheel
+	rm -r dist
+	python3 setup.py sdist bdist_wheel
+	twine upload dist/*
