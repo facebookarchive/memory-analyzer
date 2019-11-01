@@ -7,6 +7,7 @@
 import os
 import pickle
 import sys
+import tempfile
 from unittest import TestCase, mock
 
 import objgraph
@@ -40,7 +41,13 @@ class ObjGraphTemplateTests(TestCase):
 
     def test_with_no_references(self):
         template = analysis_utils.render_template(
-            self.template_name, self.templates_path, 0, self.pid, [], self.filename
+            self.template_name,
+            self.templates_path,
+            0,
+            self.pid,
+            [],
+            self.filename,
+            None,
         )
         with mock.patch("builtins.open", mock.mock_open(), create=True) as mock_fifo:
             exec(template)
@@ -52,7 +59,13 @@ class ObjGraphTemplateTests(TestCase):
     @mock.patch.object(objgraph, "show_refs")
     def test_with_num_references(self, mock_refs, mock_back_refs):
         template = analysis_utils.render_template(
-            self.template_name, self.templates_path, 1, self.pid, [], self.filename
+            self.template_name,
+            self.templates_path,
+            1,
+            self.pid,
+            [],
+            self.filename,
+            None,
         )
         with mock.patch("builtins.open", mock.mock_open(), create=True) as mock_fifo:
             exec(template, {})
@@ -78,14 +91,18 @@ class ObjGraphTemplateTests(TestCase):
     @mock.patch.object(objgraph, "show_backrefs")
     @mock.patch.object(objgraph, "show_refs")
     def test_with_specific_references(self, mock_refs, mock_back_refs):
-        template = analysis_utils.render_template(
-            self.template_name,
-            self.templates_path,
-            0,
-            self.pid,
-            ["test3"],
-            self.filename,
-        )
+        with tempfile.TemporaryDirectory() as d:
+            template = analysis_utils.render_template(
+                self.template_name,
+                self.templates_path,
+                0,
+                self.pid,
+                ["test3"],
+                self.filename,
+                d,
+            )
+            self.assertEqual(1, len(os.listdir(d)), os.listdir(d))
+
         with mock.patch("builtins.open", mock.mock_open(), create=True) as mock_fifo:
             exec(template, {})
         handler = mock_fifo()

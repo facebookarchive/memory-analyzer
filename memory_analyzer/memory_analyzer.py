@@ -8,22 +8,26 @@ import errno
 import os
 import pickle
 import sys
+import tempfile
 from datetime import datetime
 from functools import partial
 from multiprocessing.pool import ThreadPool
 
 import click
+import pkg_resources
 
 from . import analysis_utils
 from .frontend import frontend_utils
 
 
 def analyze_memory_launcher(
-    pid, num_refs, specific_refs, debug, output_file, executable
+    pid, num_refs, specific_refs, debug, output_file, executable, template_out_path
 ):
-    cur_path = os.path.abspath(os.path.dirname(sys.argv[0]))
-    templates_path = cur_path + "/templates/"
-    gdb_obj = analysis_utils.GDBObject(pid, cur_path, executable)
+    templates_path = (
+        pkg_resources.resource_filename("memory_analyzer", "templates") + "/"
+    )
+    cur_path = os.path.dirname(__file__) + "/"  # not zip safe, for now
+    gdb_obj = analysis_utils.GDBObject(pid, cur_path, executable, template_out_path)
     analysis_utils.render_template(
         f"analysis.py.template",
         templates_path,
@@ -31,6 +35,7 @@ def analyze_memory_launcher(
         pid,
         specific_refs,
         output_file,
+        template_out_path,
     )
     return gdb_obj.run_analysis(debug)
 
@@ -189,6 +194,8 @@ def run(
     # Create a folder for output
     if references or output_file == default_filename:
         os.makedirs(os.path.dirname(default_filename), exist_ok=True)
+    template_out_path = tempfile.mkdtemp()
+
     # Make a new thread per PID
     worker_pool = ThreadPool(len(pids))
     target = partial(
@@ -198,11 +205,14 @@ def run(
         debug=debug,
         output_file=output_file,
         executable=executable,
+        template_out_path=template_out_path,
     )
 
     for result in worker_pool.imap_unordered(target, pids):
         if result.data is None:
-            frontend_utils.echo_error(f"{result.title} returned no data!")
+            frontend_utils.echo_error(
+                f"{result.title} returned no data!  Try rerunning with --debug"
+            )
         else:
             retrieved_objs.append(result)
     if not retrieved_objs:
