@@ -16,7 +16,7 @@ setup:
 .PHONY: test
 test:
 	python3 -m coverage run -m memory_analyzer.tests
-	python3 -m coverage report --omit='.venv/*' --show-missing
+	python3 -m coverage report --omit='.venv/*,.tox/*' --show-missing
 
 .PHONY: format
 format:
@@ -36,3 +36,10 @@ release:
 	rm -r dist
 	python3 setup.py sdist bdist_wheel
 	twine upload dist/*
+
+# Run this via 'tox -e integration' -- this verifies that templates are
+# packaged, and that nothing is leaking through from the repo.
+.PHONY: integrationtest
+integrationtest:
+	which memory_analyzer
+	python3 -m unittest memory_analyzer.integrationtest

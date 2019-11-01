@@ -15,11 +15,15 @@ from .. import analysis_utils
 
 class AnalysisUtilsTest(TestCase):
     PID = 123
-    CURRENT_PATH = os.path.abspath(os.path.dirname(sys.argv[0]))
+    CURRENT_PATH = os.path.abspath(f"{os.path.dirname(__file__)}/..")
 
     def setUp(self):
-        self.gdb = analysis_utils.GDBObject(self.PID, self.CURRENT_PATH, sys.executable)
-        self.filepath = f"{self.CURRENT_PATH}/gdb_commands.py"
+        self.gdb = analysis_utils.GDBObject(
+            self.PID, self.CURRENT_PATH, sys.executable, "/tmp"
+        )
+        self.filepath = os.path.abspath(
+            f"{os.path.dirname(__file__)}/../gdb_commands.py"
+        )
         self.executable = sys.executable
         # Swallow the info messages
         patch_info = mock.patch("memory_analyzer.frontend.frontend_utils.echo_info")

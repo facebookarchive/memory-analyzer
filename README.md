@@ -11,6 +11,9 @@ special debugging code or flags. Running the analysis will not (*cough* should n
 your process, although your process (and all of its threads!) will be paused while
 the memory analyzer gathers information about the objects in memory.
 
+You will need to install objgraph and pympler in the target binary's library
+path, in addition to the deps in `requirements*.txt` for running the frontend.
+
 ## License
 
 This source code is licensed under the MIT license. Please see the LICENSE in the root directory for more information. 
@@ -46,11 +49,20 @@ This source code is licensed under the MIT license. Please see the LICENSE in th
 
 This will put you into an ncurses UI and make a binary output file located in `memory_analyzer_out/memory_analyzer_snapshot-{TIMESTAMP}`
 
-If you are analyzing a process that was run as root, you may need to run the analyzer as root as well.
+If you are analyzing a process that was run as root, you need to run the analyzer as root as well.
 
-### Running on Ubuntu
+### Running on a modern ptrace-limited system
 
-In Maverick Meerkat (10.10) Ubuntu introduced a patch that disallows ptracing of non-child processes by non-root users. You can either look into disabling this restriction, or run the analyzer as root.
+Modern versions of at least Ubuntu and Arch have a patch that disallows ptracing
+of non-child processes by non-root users.
+
+You can disable this using
+
+```
+echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+```
+
+or run `memory_analyzer` as root.
 
 
 ## View the Output without Re-Analyzing
@@ -162,7 +174,7 @@ This is an error from GDB itself, and it could mean a couple of things:
 1. You don't have the correct debuginfo installed, or
 2. You are using the wrong Python executable. 
 
-To fix the incorrect debuginf install the debuginfo associated with the python runtime the analyzed process is using. For example:
+To fix the incorrect debuginfo install the debuginfo associated with the python runtime the analyzed process is using. For example:
     
     sudo yum install python3-debuginfo
 

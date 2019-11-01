@@ -33,6 +33,7 @@ setup(
     ],
     license="MIT",
     packages=find_packages(),
+    package_data={"memory_analyzer": ["templates/*.template"]},
     test_suite="memory_analyzer.tests",
     python_requires=">=3.6",
     setup_requires=["setuptools"],

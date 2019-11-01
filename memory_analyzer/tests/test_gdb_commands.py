@@ -40,8 +40,8 @@ class GdbCommandsTests(TestCase):
         )
         wrap = gdb_commands.lock_GIL(func)
         wrap()
-        call_1 = "call PyGILState_Ensure()"
-        call_2 = "call PyGILState_Release($2)"
+        call_1 = "call (void*) PyGILState_Ensure()"
+        call_2 = "call (void) PyGILState_Release($2)"
         mock_calls = [mock.call(call_1, to_string=True), mock.call(call_2)]
         mock_gdb.execute.assert_has_calls(mock_calls)
         mock_write.assert_has_calls([mock.call("$2"), mock.call("\n")])
@@ -52,8 +52,8 @@ class GdbCommandsTests(TestCase):
         mock_gdb.execute.return_value = "[New Thread 0x7f48e4dd7700 (LWP 2640572)]"
         wrap = gdb_commands.lock_GIL(func)
         wrap()
-        call_1 = "call PyGILState_Ensure()"
-        call_2 = "call PyGILState_Release($1)"
+        call_1 = "call (void*) PyGILState_Ensure()"
+        call_2 = "call (void) PyGILState_Release($1)"
         mock_calls = [mock.call(call_1, to_string=True), mock.call(call_2)]
         mock_gdb.execute.assert_has_calls(mock_calls)
         mock_write.assert_has_calls([mock.call("$1"), mock.call("\n")])
