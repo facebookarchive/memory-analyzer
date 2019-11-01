@@ -18,7 +18,7 @@ setup(
     description="Python 3 memory analyzer for running processes",
     long_description=readme,
     long_description_content_type="text/markdown",
-    version="0.1.1",
+    version="0.1.2",
     author="Lisa Roach, Facebook",
     author_email="lisroach@fb.com",
     url="https://github.com/facebookincubator/memory-analyzer",
