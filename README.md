@@ -1,5 +1,7 @@
 # Python3 Memory Analyzer For Running Processes
 
+[![Actions Status](https://github.com/facebookincubator/memory-analyzer/workflows/memory_analyzer_tests/badge.svg)](https://github.com/facebookincubator/memory-analyzer/actions)
+
 Chasing down a memory leak? Don't want to add debugging code, or even stop your process?
 
 You've come to the right place.
@@ -16,10 +18,9 @@ path, in addition to the deps in `requirements*.txt` for running the frontend.
 
 ## License
 
-This source code is licensed under the MIT license. Please see the LICENSE in the root directory for more information. 
+This source code is licensed under the MIT license. Please see the LICENSE in the root directory for more information.
 
 ## Things you can find out:
-
 
 1. How many of each object you have in memory
 
@@ -110,7 +111,7 @@ Comparing snapshots can be useful to show you how objects grow over time. To cre
 
     memory_analyzer run $PID --snapshot <previous snapshot file>
 
-By default your snapshot files will all be saved in memory_analyzer_out/. 
+By default your snapshot files will all be saved in memory_analyzer_out/.
 The snapshot analysis will be located on the second page of the ncurses UI, so hit the arrow key to the right to scroll to the snapshot page once you are in the UI.
 
 
@@ -135,28 +136,28 @@ If you don't want the file to be the default name, pass in your own custom name.
 Navigating the UI should be relatively intuitive. You can use the arrow keys or wasd to scroll up and down.
 
    Scroll Up: Up arrow key or 'w'
-   
+
    Scroll Down: Down arrow key or 's'
-    
+
    Switch to next page: Right arrow key or 'd'
-   
+
    Switch to previous page: Left arrow key or 'a'
-   
+
    Page Up: Page Up key
-    
+
    Page Down: Page Down Key
-    
+
    Jump to Bottom of page: G
-    
+
    Jump to Top of page: H
-    
+
    Exit: 'q'
-    
-  
+
+
 
 ## Dealing with Multithreading
 
-Right now the program does NOT run in non-stop mode, meaning that if you have multiple threads they will all be paused during analysis. This could be a problem for some services that require threads to be completing live in the background. It might be possible to support non-stop mode (where only one thread gets paused), but it will only work if the process is stopped and started again by the memory analyzer (this is a limitation of GDB). Please contact me (lisroach) if you are interested in this feature. 
+Right now the program does NOT run in non-stop mode, meaning that if you have multiple threads they will all be paused during analysis. This could be a problem for some services that require threads to be completing live in the background. It might be possible to support non-stop mode (where only one thread gets paused), but it will only work if the process is stopped and started again by the memory analyzer (this is a limitation of GDB). Please contact me (lisroach) if you are interested in this feature.
 
 Importantly, this means debugging multithreaded processes goes **much** slower than single threaded- because it takes the time to find and pause each individual thread. If your process has timeouts that could be triggered by a paused thread (e.g. something that talks over the network), use the memory_analyzer with caution.
 
@@ -172,10 +173,10 @@ Try running the process with the `--debug` flag enabled for more information. If
 
 This is an error from GDB itself, and it could mean a couple of things:
 1. You don't have the correct debuginfo installed, or
-2. You are using the wrong Python executable. 
+2. You are using the wrong Python executable.
 
 To fix the incorrect debuginfo install the debuginfo associated with the python runtime the analyzed process is using. For example:
-    
+
     sudo yum install python3-debuginfo
 
 or
@@ -195,7 +196,7 @@ You should not see:
 
 `$5 = <some number>`
 
-or 
+or
 
 ![Inferior Detached](images/inferior_detached.png)
 
@@ -218,7 +219,7 @@ It is not until you see:
 
 ![Detached](images/debug_detached.png)
 
-That the analyzer itself is running. Generally this runs very fast and you should barely see these messages flicker by. 
+That the analyzer itself is running. Generally this runs very fast and you should barely see these messages flicker by.
 
 
 If you don't see the above, but you do see:
