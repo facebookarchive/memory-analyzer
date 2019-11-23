@@ -1,0 +1,6 @@
+[run]
+branch = True
+source = memory_analyzer
+
+[report]
+precision = 2
