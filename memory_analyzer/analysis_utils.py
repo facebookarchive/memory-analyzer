@@ -168,12 +168,12 @@ def render_template(
     num_refs,
     pid,
     specific_refs,
-    output_file,
+    output_path,
     template_out_dir,
 ):
     objgraph_template = load_template(template_name, templates_path)
     template = objgraph_template.render(
-        num_refs=num_refs, pid=pid, specific_refs=specific_refs, output_file=output_file
+        num_refs=num_refs, pid=pid, specific_refs=specific_refs, output_path=output_path
     )
     # This path has to match the end of gdb_commands.py; the env var is set in
     # GDBObject constructor above.

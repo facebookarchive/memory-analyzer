@@ -28,13 +28,14 @@ def analyze_memory_launcher(
     )
     cur_path = os.path.dirname(__file__) + "/"  # not zip safe, for now
     gdb_obj = analysis_utils.GDBObject(pid, cur_path, executable, template_out_path)
+    output_path = os.path.abspath(output_file)
     analysis_utils.render_template(
         f"analysis.py.template",
         templates_path,
         num_refs,
         pid,
         specific_refs,
-        output_file,
+        output_path,
         template_out_path,
     )
     return gdb_obj.run_analysis(debug)

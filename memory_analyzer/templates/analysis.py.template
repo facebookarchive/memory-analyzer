@@ -58,7 +58,7 @@ try:
       obj = sublist[0]
       obj_shortname = obj.split('.')[-1]
       obj_shortname = re.sub("[^A-Za-z0-9._]+", "", obj_shortname)
-      dirname = os.path.dirname(os.path.abspath("{{ output_file }}"))
+      dirname = os.path.dirname("{{ output_path }}")
       with SwallowPrints():
           forw = forward_references(dirname, obj, obj_shortname)
           back = backwards_references(dirname, obj, obj_shortname)
